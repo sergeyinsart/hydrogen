@@ -5,6 +5,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {AuthModule} from './auth/auth.module';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {JwtInterceptor} from './_helperts/jwt.nterceptor';
+import {MaterialModule} from './material.module';
 
 @NgModule({
   declarations: [
@@ -14,9 +17,12 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
     BrowserModule,
     AppRoutingModule,
     NoopAnimationsModule,
-    AuthModule
+    AuthModule,
+    MaterialModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
