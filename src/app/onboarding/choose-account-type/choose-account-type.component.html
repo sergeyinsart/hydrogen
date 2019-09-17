@@ -1,0 +1,15 @@
+<h1>Select account type</h1>
+
+<mat-grid-list cols="2" gutterSize="1em">
+  <mat-grid-tile *ngFor="let accountType of accountTypes" (click)="selectAccountType(accountType)">
+    <mat-card class="selectCard">
+      <mat-card-title>{{accountType.name}}</mat-card-title>
+      <mat-card-content>
+        <mat-icon>{{this.icons[accountType.name | lowercase]}}</mat-icon>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+</mat-grid-list>
+
+
+

@@ -1,18 +1,26 @@
 import { NgModule } from '@angular/core';
 
 import {
-  MatCardModule,
   MatInputModule,
   MatButtonModule,
   MatSnackBarModule,
   MAT_SNACK_BAR_DEFAULT_OPTIONS,
+  MatCardModule,
+  MatIconModule,
+  MatGridListModule, MatMenuModule,
 } from '@angular/material';
+
+import {LayoutModule} from '@angular/cdk/layout';
 
 const modules = [
   MatCardModule,
   MatInputModule,
   MatButtonModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatIconModule,
+  MatGridListModule,
+  MatMenuModule,
+  LayoutModule
 ];
 
 @NgModule({

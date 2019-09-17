@@ -31,6 +31,9 @@ export class LoginComponent implements OnInit {
     }
 
     this.auth.login(this.form.value.username, this.form.value.password)
+      .then(() => {
+        return this.auth.getClient();
+      })
       .catch(() => {
         this.snackBar.open('Error');
       })

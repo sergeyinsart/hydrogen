@@ -8,6 +8,8 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {JwtInterceptor} from './_helperts/jwt.nterceptor';
 import {MaterialModule} from './material.module';
+import {OnboardingModule} from './onboarding/onboarding.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,9 @@ import {MaterialModule} from './material.module';
     AppRoutingModule,
     NoopAnimationsModule,
     AuthModule,
-    MaterialModule
+    MaterialModule,
+    OnboardingModule,
+    BrowserAnimationsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

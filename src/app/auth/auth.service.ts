@@ -7,9 +7,12 @@ import {environment} from '../../environments/environment';
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.passwordToken = localStorage.getItem('token');
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  }
   currentUser: User;
-  private tempToken: string;
+  passwordToken: string;
 
   private static generateHeader(authString) {
     return {
@@ -21,15 +24,11 @@ export class AuthService {
   createUser(userData: User) {
     const url = `${environment.apiUrl}/nucleus/v1/client`;
 
-    return this.getToken()
-      .then(() => {
-        const header = AuthService.generateHeader(`Bearer ${this.tempToken}`);
+    const header = AuthService.generateHeader(`Bearer ${environment.apiCredentials  }`);
 
-        return this.http.post(url, userData, header).toPromise();
-      })
+    return this.http.post(url, userData, header).toPromise()
       .then((user: User) => {
         this.currentUser = user;
-        localStorage.setItem('currentUser', JSON.stringify(user));
 
         return user;
       });
@@ -38,30 +37,11 @@ export class AuthService {
   createPassword(username, password) {
     const url = `${environment.apiUrl}/admin/v1/client`;
 
-    const header = AuthService.generateHeader(`Bearer ${this.tempToken}`);
+    const header = AuthService.generateHeader(`Bearer ${environment.clientCredentialsToken}`);
 
     const userCredentials = new UserCredentialsConfig(username, password);
 
-    return this.http.post(url, userCredentials, header).toPromise()
-      .then(() => {
-        this.tempToken = null;
-        });
-  }
-
-  private getToken() {
-    if (this.tempToken) {
-      return Promise.resolve(this.tempToken);
-    }
-
-    const url = environment.apiUrl + '/authorization/v1/oauth/token?grant_type=client_credentials';
-
-    const header = AuthService.generateHeader( `Basic ${environment.apiCredentials}`);
-
-    return this.http.post(url, {}, header).toPromise()
-      .then((data: any) => {
-        this.tempToken = data.access_token;
-        return this.tempToken;
-      });
+    return this.http.post(url, userCredentials, header).toPromise();
   }
 
   login(username, password) {
@@ -79,8 +59,22 @@ export class AuthService {
       params: httpParams
     }).toPromise()
       .then((data: any) => {
-        this.tempToken = data.access_token;
-        return this.tempToken;
+        this.passwordToken = data.access_token;
+        localStorage.setItem('token', data.access_token);
+        return data;
+      });
+  }
+
+  getClient() {
+    const url = environment.apiUrl + '/nucleus/v1/client';
+
+    return this.http.get(url).toPromise()
+      .then((data: {content: User[]}) => {
+        const currentUser = data.content[0];
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        this.currentUser = currentUser;
+
+        return this.currentUser;
       });
   }
 }
