@@ -12,6 +12,7 @@ import {
 } from './onboarding.routing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { PortfolioRecommendationComponent } from './portfolio-recommendation/portfolio-recommendation.component';
+import {ChartsModule} from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { PortfolioRecommendationComponent } from './portfolio-recommendation/por
     CommonModule,
     MaterialModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ChartsModule
   ],
   providers: [
     AccountTypesResolver,

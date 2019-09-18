@@ -126,9 +126,7 @@ export class PortfolioRecommendationService {
     const url = `${environment.apiUrl}/nucleus/v1/security/${securityId}`;
 
     return this.http.get(url).toPromise()
-      .then((data: any) => {
-        return data.content;
-      });
+      .then((data: Securitie) => data);
   }
 
   getSecuritiesAllocationData(allocationId): Promise<{modelHolding: ModelHolding[], securities: Securitie[]}> {
@@ -154,6 +152,16 @@ export class PortfolioRecommendationService {
     return this.getSuggestedAllocation()
       .then(() => {
         return this.getSecuritiesAllocationData(this.suggestedAllocation.id);
+      })
+      .then((data) => {
+        return data.modelHolding.map((m) => {
+          const security = data.securities.find(s => s.id === m.security_id);
+          return {
+            strategic_weight: m.strategic_weight,
+            securityName: security.name,
+            ticker: security.ticker,
+          };
+        });
       });
   }
 

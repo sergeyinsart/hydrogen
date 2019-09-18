@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {Allocation, ClientResponse, Question} from '../onboarding';
+import {ClientResponse} from '../onboarding';
 import {PortfolioRecommendationService} from './portfolio-recommendation.service';
+import {Label} from 'ng2-charts';
 
 @Component({
   selector: 'app-portfolio-recommendation',
@@ -9,10 +10,7 @@ import {PortfolioRecommendationService} from './portfolio-recommendation.service
   styleUrls: ['./portfolio-recommendation.component.scss']
 })
 export class PortfolioRecommendationComponent implements OnInit {
-  private suggestedAllocation: Allocation;
-  private clientResponse: ClientResponse[];
-  private timeHorizonLabel: string;
-  private reskLevelLabel: string;
+  private pieChartData: number[];
 
   constructor(
     route: ActivatedRoute,
@@ -24,10 +22,18 @@ export class PortfolioRecommendationComponent implements OnInit {
 
     this.timeHorizonLabel = portfolioRecommendationService.getTimeHorizonAnswer(questions).label;
     this.reskLevelLabel = portfolioRecommendationService.getTimeRiskProfileAnswer(questions).label;
+
+
+    this.pieChartData = this.suggestedAllocation.map(a => a.strategic_weight);
+    this.pieChartLabels = this.suggestedAllocation.map(a => a.securityName);
   }
+  private suggestedAllocation: any[];
+  private clientResponse: ClientResponse[];
+  private timeHorizonLabel: string;
+  private reskLevelLabel: string;
 
-  ngOnInit() {
+  pieChartLabels: Label[];
 
-  }
 
+  ngOnInit() {}
 }
