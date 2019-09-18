@@ -1,1 +1,26 @@
-<p>questionnaire works!</p>
+<form (ngSubmit)="submit()" [formGroup]="form">
+  <mat-horizontal-stepper #stepper>
+    <mat-step *ngFor="let question of questions" [label]="question.title">
+      <h2>{{question.title}}</h2>
+      <mat-form-field *ngIf="question.question_type === 'monetary'">
+        <input type="number" matInput min="0" [formControlName]="question.id">
+        <mat-icon matPrefix>attach_money</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="question.question_type === 'text'">
+        <input type="text" placeholder="Age" matInput [formControlName]="question.id">
+      </mat-form-field>
+
+      <div *ngIf="question.question_type === 'radio'">
+        <mat-radio-group aria-label="Select an option" [formControlName]="question.id">
+          <mat-radio-button [value]="answer.id" class="vertical-radio" value="1" *ngFor="let answer of question.answers">{{answer.label}}</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <div class="button">
+        <button type="button" color="primary" mat-raised-button (click)="nextStep(question)">Next</button>
+      </div>
+
+    </mat-step>
+  </mat-horizontal-stepper>
+</form>

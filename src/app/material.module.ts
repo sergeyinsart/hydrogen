@@ -7,8 +7,12 @@ import {
   MAT_SNACK_BAR_DEFAULT_OPTIONS,
   MatCardModule,
   MatIconModule,
-  MatGridListModule, MatMenuModule,
+  MatGridListModule,
+  MatMenuModule,
+  MatStepperModule,
 } from '@angular/material';
+
+import {MatRadioModule} from '@angular/material/radio';
 
 import {LayoutModule} from '@angular/cdk/layout';
 
@@ -20,7 +24,9 @@ const modules = [
   MatIconModule,
   MatGridListModule,
   MatMenuModule,
-  LayoutModule
+  LayoutModule,
+  MatStepperModule,
+  MatRadioModule
 ];
 
 @NgModule({
