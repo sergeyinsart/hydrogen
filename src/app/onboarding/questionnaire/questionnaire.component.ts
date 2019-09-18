@@ -1,13 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {OnboardingService} from '../onboarding.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ClientResponse, Question} from '../onboarding';
 import {MatHorizontalStepper, MatSnackBar} from '@angular/material';
 import * as _sortBy from 'lodash/sortBy';
 import {FormControl, FormGroup} from '@angular/forms';
 import {AuthService} from '../../auth/auth.service';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
+import {QuestionnaireService} from './questionnaire.service';
 
 @Component({
   selector: 'app-questionnaire',
@@ -25,7 +24,8 @@ export class QuestionnaireComponent implements OnInit {
     private route: ActivatedRoute,
     private authService: AuthService,
     private snackBar: MatSnackBar,
-    private http: HttpClient
+    private questionnaireService: QuestionnaireService,
+    private router: Router
   ) {
     this.questions = _sortBy(route.snapshot.data.questionnaire.questions, (a => a.order_index));
   }
@@ -47,20 +47,33 @@ export class QuestionnaireComponent implements OnInit {
   nextStep(question: Question) {
     const answerId = this.form.value[question.id];
 
-    const response: ClientResponse = {
-      client_id: this.authService.currentUser.id,
-      answer_id: question.id,
-      answer_value: question.answers.find(a => a.id === answerId).value
-    };
+    if (question.answers.length > 0) {
+      const response: ClientResponse = {
+        client_id: this.authService.currentUser.id,
+        answer_id: answerId,
+        answer_value: question.answers.find(a => a.id === answerId).value
+      };
 
-    this.onboardingService.createClientResponse(response)
-      .then(() => {
-        this.stepper.next();
-      })
-      .catch(() => {
-        // TODO - correct error message
-        this.snackBar.open('error');
-      });
+      this.onboardingService.createClientResponse(response)
+        .then(() => {
+          this.stepper.next();
+        })
+        .catch(() => {
+          // TODO - correct error message
+          this.snackBar.open('error');
+        });
+    } else {
+      this.stepper.next();
+    }
   }
 
+  defineAllocation() {
+    this.questionnaireService.getClientResponsesList()
+      .then(() => {
+        return this.questionnaireService.defineAllocation();
+      })
+      .then(() => {
+        this.router.navigate(['/portfolio-recommendation']);
+      });
+  }
 }

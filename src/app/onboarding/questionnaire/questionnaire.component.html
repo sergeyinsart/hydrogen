@@ -1,5 +1,5 @@
 <form (ngSubmit)="submit()" [formGroup]="form">
-  <mat-horizontal-stepper #stepper>
+  <mat-horizontal-stepper #stepper linear>
     <mat-step *ngFor="let question of questions" [label]="question.title">
       <h2>{{question.title}}</h2>
       <mat-form-field *ngIf="question.question_type === 'monetary'">
@@ -24,3 +24,5 @@
     </mat-step>
   </mat-horizontal-stepper>
 </form>
+
+<button (click)="defineAllocation()">Define</button>

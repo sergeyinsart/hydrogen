@@ -60,8 +60,8 @@ export class OnboardingService {
     return this.http.get(url).toPromise();
   }
 
-  getAllocation() {
-    const url = `${environment.apiUrl}/nucleus/v1/allocation?filter=node_map.node_id==427aca5b-9ea1-4a5f-8594-ee5f11ce4a75`;
+  getAllocation(id) {
+    const url = `${environment.apiUrl}/nucleus/v1/allocation?filter=node_map.node_id==${id}`;
 
     return this.http.get(url).toPromise();
   }

@@ -56,7 +56,7 @@ export interface ClientResponse {
   metadata?: any;
 }
 
-export interface Node {
+export interface DecigionNode {
   id: string;
   create_date: Date;
   update_date: Date;
