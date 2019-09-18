@@ -21,10 +21,10 @@ export class QuestionnaireComponent implements OnInit {
 
   constructor(
     private onboardingService: OnboardingService,
+    private questionnaireService: QuestionnaireService,
     private route: ActivatedRoute,
     private authService: AuthService,
     private snackBar: MatSnackBar,
-    private questionnaireService: QuestionnaireService,
     private router: Router
   ) {
     this.questions = _sortBy(route.snapshot.data.questionnaire.questions, (a => a.order_index));
@@ -54,7 +54,7 @@ export class QuestionnaireComponent implements OnInit {
         answer_value: question.answers.find(a => a.id === answerId).value
       };
 
-      this.onboardingService.createClientResponse(response)
+      this.questionnaireService.createClientResponse(response)
         .then(() => {
           this.stepper.next();
         })
@@ -68,12 +68,6 @@ export class QuestionnaireComponent implements OnInit {
   }
 
   defineAllocation() {
-    this.questionnaireService.getClientResponsesList()
-      .then(() => {
-        return this.questionnaireService.defineAllocation();
-      })
-      .then(() => {
-        this.router.navigate(['/portfolio-recommendation']);
-      });
+    this.router.navigate(['/portfolio-recommendation']);
   }
 }

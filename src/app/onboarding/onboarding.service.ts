@@ -4,8 +4,6 @@ import {environment} from '../../environments/environment';
 import {AccountType, ClientResponse} from './onboarding';
 import {AuthService} from '../auth/auth.service';
 
-const questionnaireId = 'b87dbd6a-2422-45d2-961b-759a8442e570';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -15,12 +13,6 @@ export class OnboardingService {
     private http: HttpClient,
     private authService: AuthService
   ) { }
-
-  getQuestions() {
-    const url = `${environment.apiUrl}/nucleus/v1/questionnaire/${questionnaireId}`;
-
-    return this.http.get(url).toPromise();
-  }
 
   getAccountTypes() {
     const url = `${environment.apiUrl}/nucleus/v1/account_type`;
@@ -42,12 +34,6 @@ export class OnboardingService {
     return this.http.post(url, data).toPromise();
   }
 
-  createClientResponse(clientResponse: ClientResponse) {
-    const url = `${environment.apiUrl}/nucleus/v1/client_response`;
-
-    return this.http.post(url, clientResponse).toPromise();
-  }
-
   getDecisionTree() {
     const url = `${environment.apiUrl}/nucleus/v1/decision_tree/3396e7f6-5686-4e0f-b615-5cd12b2f4cde`;
 
@@ -60,7 +46,7 @@ export class OnboardingService {
     return this.http.get(url).toPromise();
   }
 
-  getAllocation(id) {
+  getAllocationByNodeId(id) {
     const url = `${environment.apiUrl}/nucleus/v1/allocation?filter=node_map.node_id==${id}`;
 
     return this.http.get(url).toPromise();

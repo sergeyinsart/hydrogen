@@ -3,13 +3,21 @@ import { CommonModule } from '@angular/common';
 import { QuestionnaireComponent } from './questionnaire/questionnaire.component';
 import { ChooseAccountTypeComponent } from './choose-account-type/choose-account-type.component';
 import {MaterialModule} from '../material.module';
-import {AccountTypesResolver, NodeRelationshipResolver, NodesResolver, QuestionsResolver} from './onboarding.routing';
+import {
+  AccountTypesResolver, ClientResponseResolver,
+  NodeRelationshipResolver,
+  NodesResolver,
+  QuestionsResolver,
+  SuggestedAllocationResolver
+} from './onboarding.routing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { PortfolioRecommendationComponent } from './portfolio-recommendation/portfolio-recommendation.component';
 
 @NgModule({
   declarations: [
     QuestionnaireComponent,
-    ChooseAccountTypeComponent
+    ChooseAccountTypeComponent,
+    PortfolioRecommendationComponent
   ],
   imports: [
     CommonModule,
@@ -21,7 +29,9 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     AccountTypesResolver,
     QuestionsResolver,
     NodesResolver,
-    NodeRelationshipResolver
+    NodeRelationshipResolver,
+    SuggestedAllocationResolver,
+    ClientResponseResolver
   ]
 })
 export class OnboardingModule { }

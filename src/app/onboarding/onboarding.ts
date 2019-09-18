@@ -21,7 +21,7 @@ export interface AccountType {
   metadata: any;
 }
 
-interface Answer {
+export interface Answer {
   id: string;
   value: string;
   label: string;
@@ -77,4 +77,57 @@ export interface NodeRelationship {
   is_leaf: boolean;
   decision_tree_id: string;
   metadata: any;
+}
+
+export interface Allocation {
+  id: string;
+  create_date: Date;
+  update_date: Date;
+  category: string;
+  description: string;
+  is_active: boolean;
+  name: string;
+  volatility: number;
+  performance: number;
+  node_map: {node_id: string};
+  metadata: any;
+}
+
+export interface ModelHolding {
+  id: string;
+  create_date: Date;
+  update_date: Date;
+  current_weight: number;
+  strategic_weight: number;
+  date: string;
+  model_id: string;
+  security_id: string;
+  metadata: any;
+}
+
+export interface SecurityCountry {
+  weight: number;
+  country: string;
+}
+
+interface SecurityComposition {
+  component_id: string;
+  start_date: string;
+  end_date: string;
+  weight: number;
+}
+
+export interface Securitie {
+  id: string;
+  create_date: Date;
+  update_date: Date;
+  is_active: boolean;
+  name: string;
+  security_class: string;
+  ticker: string;
+  proxy_id: string;
+  metadata: any;
+  security_country: SecurityCountry[];
+  security_composition: SecurityComposition[];
+  asset_class: string;
 }
