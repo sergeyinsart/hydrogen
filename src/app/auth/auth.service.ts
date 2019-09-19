@@ -2,12 +2,16 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {User, UserCredentialsConfig, Account} from './user';
 import {environment} from '../../environments/environment';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private router: Router
+    ) {
     this.clientCredToken = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6WyJOL0EiXSwiZXhwIjoxNTY4OTAyMjQ4LCJhdXRob3JpdGllcyI6WyJST0xFX1NVUEVSX0FETUlOIl0sImp0aSI6ImQ1ZjdhYmUxLTVjYjEtNDExMi05ZTU0LThhNGVhMGRjMzc0NiIsImNsaWVudF9pZCI6IjZxb2NicXZnNWhoejFocTVxd21lM21lZjdsIiwiYXBwcyI6Im51Y2xldXMscHJvdG9uLGVsZWN0cm9uLGludGVncmF0aW9uIn0.OgPJ0U5-yeIZr6g7dO-CrJgBqTQi48SyPrmXqHHoFVp1kVTwkfQSFNnlIgDs8M_cbUudfePNKqY06d6ioox8SQ4PICagHt8kg7JDz2xqB_ZCm68Ud8jcWg2uIFhoy2dP5MmJjJp7seHUtDyi003scbQk1jaQhUk-FjRpmTgUugbD5mDhRnG8-xJkQGAz645ADNv5tha-KZm42o3qmRcEGAmI6PxMcGdmTKKGUmdmGCvtTexpYtjnEfj_aUHW1KFQbOVydl75fiQJLuYAYce8k68Br3GRa72KZGZo1MRL1mHAG89nuKNftLyNev5huDdgEpXrDGqnYR6l2ifuAzsctw';
     this.passwordToken = localStorage.getItem('token');
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -100,5 +104,17 @@ export class AuthService {
       });
   }
 
+  logout() {
+    this.currentUser = null;
+    this.clientAccount = null;
+
+    localStorage.clear();
+
+    this.router.navigate(['/login']);
+  }
+
+  get showNavbar() {
+    return !!this.currentUser;
+  }
 
 }

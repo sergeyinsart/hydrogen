@@ -11,6 +11,7 @@ import {MaterialModule} from './material.module';
 import {OnboardingModule} from './onboarding/onboarding.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {DashboardModule} from './dashboard/dashboard.module';
+import {UiModule} from './ui/ui.module';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import {DashboardModule} from './dashboard/dashboard.module';
     MaterialModule,
     OnboardingModule,
     BrowserAnimationsModule,
-    DashboardModule
+    DashboardModule,
+    UiModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
