@@ -34,26 +34,8 @@ export class OnboardingService {
     return this.http.post(url, data).toPromise();
   }
 
-  getDecisionTree() {
-    const url = `${environment.apiUrl}/nucleus/v1/decision_tree/3396e7f6-5686-4e0f-b615-5cd12b2f4cde`;
-
-    return this.http.get(url).toPromise();
-  }
-
-  getAllocationList() {
-    const url = `${environment.apiUrl}/nucleus/v1/allocation`;
-
-    return this.http.get(url).toPromise();
-  }
-
   getAllocationByNodeId(id) {
     const url = `${environment.apiUrl}/nucleus/v1/allocation?filter=node_map.node_id==${id}`;
-
-    return this.http.get(url).toPromise();
-  }
-
-  performance() {
-    const url = `${environment.apiUrl}/nucleus/v1/allocation/604e8aec-4b20-427c-8a71-48713dc92439/performance?stat=monte_carlo`;
 
     return this.http.get(url).toPromise();
   }

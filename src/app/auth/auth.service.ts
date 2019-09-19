@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {User, UserCredentialsConfig} from './user';
+import {User, UserCredentialsConfig, Account} from './user';
 import {environment} from '../../environments/environment';
 
 @Injectable({
@@ -15,6 +15,7 @@ export class AuthService {
   currentUser: User;
   passwordToken: string;
   clientCredToken: string;
+  clientAccount: Account;
 
   private static generateHeader(authString) {
     return {
@@ -70,6 +71,10 @@ export class AuthService {
   getClient() {
     const url = environment.apiUrl + '/nucleus/v1/client';
 
+    if (this.currentUser) {
+      return Promise.resolve(this.currentUser);
+    }
+
     return this.http.get(url).toPromise()
       .then((data: {content: User[]}) => {
         const currentUser = data.content[0];
@@ -79,4 +84,21 @@ export class AuthService {
         return this.currentUser;
       });
   }
+
+  getClientAccount(): Promise<Account> {
+    const url = `${environment.apiUrl}/nucleus/v1/account`;
+
+    if (this.clientAccount) {
+      return Promise.resolve(this.clientAccount);
+    }
+
+    return this.http.get(url).toPromise()
+      .then((data: {content: Account}) => {
+        this.clientAccount = data.content && data.content[0];
+
+        return this.clientAccount;
+      });
+  }
+
+
 }

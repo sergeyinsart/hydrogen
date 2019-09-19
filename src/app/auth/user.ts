@@ -36,3 +36,18 @@ export class UserCredentialsConfig {
     this.password = password;
   }
 }
+
+export interface Account {
+  id: string;
+  create_date: Date;
+  update_date: Date;
+  managed: boolean;
+  name: string;
+  account_type_id: string;
+  clients: {
+    client_id: string;
+    client_account_association_type: string;
+  };
+  goals: any;
+  metadata: any;
+}

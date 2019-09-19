@@ -10,6 +10,7 @@ import {JwtInterceptor} from './_helperts/jwt.nterceptor';
 import {MaterialModule} from './material.module';
 import {OnboardingModule} from './onboarding/onboarding.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {DashboardModule} from './dashboard/dashboard.module';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AuthModule,
     MaterialModule,
     OnboardingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    DashboardModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

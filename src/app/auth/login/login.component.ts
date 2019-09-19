@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {AuthService} from '../auth.service';
 import {MatSnackBar} from '@angular/material';
+import {Router} from '@angular/router';
 
 // TODO need to correct messages
 // TODO need to add client validation
@@ -16,6 +17,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private snackBar: MatSnackBar,
+    private router: Router
   ) { }
   form: FormGroup = new FormGroup({
     username: new FormControl(''),
@@ -32,13 +34,10 @@ export class LoginComponent implements OnInit {
 
     this.auth.login(this.form.value.username, this.form.value.password)
       .then(() => {
-        return this.auth.getClient();
+        return this.router.navigate(['/']);
       })
       .catch(() => {
         this.snackBar.open('Error');
-      })
-      .then(() => {
-        this.snackBar.open('Success');
       });
   }
 
