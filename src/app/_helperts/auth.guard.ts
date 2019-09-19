@@ -16,18 +16,7 @@ export class AuthGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
 
     if (this.auth.passwordToken) {
-      return Promise.all([this.auth.getClient(), this.auth.getClientAccount()])
-        .then(() => {
-          if (!this.auth.currentUser) {
-            this.router.navigate(['/login']);
-            return false;
-          } else if (!this.auth.clientAccount) {
-            this.router.navigate(['/choose-account-type']);
-            return false;
-          } else {
-            return true;
-          }
-        });
+      return true;
     } else {
       this.router.navigate(['/login']);
     }

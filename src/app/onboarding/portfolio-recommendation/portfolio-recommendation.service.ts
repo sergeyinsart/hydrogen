@@ -18,7 +18,7 @@ export class PortfolioRecommendationService {
   finalNodeId = '427aca5b-9ea1-4a5f-8594-ee5f11ce4a75';
   suggestedModelHolding: ModelHolding[];
   suggestedSecurities: Securitie[];
-  private suggestedAllocation: Allocation;
+  suggestedAllocation: Allocation;
   // finalNodeId: string;
 
   constructor(
@@ -163,6 +163,32 @@ export class PortfolioRecommendationService {
           };
         });
       });
+  }
+
+  subscribeAccount(accountId, allocationId) {
+    const url = `${environment.apiUrl}/nucleus/v1/account/${accountId}/subscribe`;
+
+    const data = {
+      current_weight: 100,
+      strategic_weight: 100,
+      date: new Date(),
+      allocation_id: allocationId
+    };
+
+    return this.http.post(url, data).toPromise();
+  }
+
+  createAssetSize(portfolioId) {
+    const url = `${environment.apiUrl}/nucleus/v1/portfolio_asset_size`;
+
+    const data = {
+      date: new Date(),
+      asset_size: 10000,
+      cash_flow: 10000,
+      portfolio_id: portfolioId
+    };
+
+    return this.http.post(url, data).toPromise();
   }
 
 }

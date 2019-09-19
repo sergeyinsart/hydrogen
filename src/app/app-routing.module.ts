@@ -6,6 +6,7 @@ import {ONBOARDING_ROUTES} from './onboarding/onboarding.routing';
 import {AuthGuard} from './_helperts/auth.guard';
 import {DASHBOARD_ROUTES} from './dashboard/dashboard.routing';
 import {DashboardComponent} from './dashboard/dashboard/dashboard.component';
+import {OnboardingGuard} from './_helperts/onboarding.guard';
 
 const routes: Routes = [
   {
@@ -19,7 +20,7 @@ const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard, OnboardingGuard]
   },
   ...ONBOARDING_ROUTES,
   ...DASHBOARD_ROUTES,

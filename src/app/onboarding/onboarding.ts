@@ -131,3 +131,15 @@ export interface Securitie {
   security_composition: SecurityComposition[];
   asset_class: string;
 }
+
+export interface PortfolioRecommendation {
+  id: string;
+  create_date: Date;
+  update_date: Date;
+  description: string;
+  name: string;
+  percentage: number;
+  account_id: string;
+  model_id: string;
+  metadata: any;
+}
