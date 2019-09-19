@@ -5,6 +5,7 @@ import {PortfolioRecommendationService} from './portfolio-recommendation.service
 import {Label} from 'ng2-charts';
 import {AuthService} from '../../auth/auth.service';
 import {MatSnackBar} from '@angular/material';
+import * as _update from 'lodash/update';
 
 const timeHorizonLabels = {
   '&gt;20 years': 'greater than 20 years',
@@ -56,7 +57,7 @@ export class PortfolioRecommendationComponent implements OnInit {
   }
 
   subscribeAccount() {
-    const accountId = this.auth.clientAccount.id;
+    const accountId = this.auth.currentUser.metadata.accountId;
     const allocationId = this.portfolioRecommendationService.suggestedAllocation.id;
     this.portfolioRecommendationService.subscribeAccount(accountId, allocationId)
       .then((data: PortfolioRecommendation[]) => {
@@ -66,6 +67,12 @@ export class PortfolioRecommendationComponent implements OnInit {
           this.createPortfolioHoldings(portfolio.id)
         ];
         return Promise.all(promises);
+      })
+      .then(() => {
+        const updatedUser = {...this.auth.currentUser};
+        _update(updatedUser, 'metadata.hasPortfolio', () => true);
+
+        return this.auth.updateUser(updatedUser);
       })
       .then(() => {
         return this.router.navigate(['/dashboard']);

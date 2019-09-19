@@ -7,7 +7,8 @@ import {PortfolioRecommendationService} from './portfolio-recommendation/portfol
 import {PortfolioRecommendationComponent} from './portfolio-recommendation/portfolio-recommendation.component';
 import {QuestionnaireService} from './questionnaire/questionnaire.service';
 import {AuthGuard} from '../_helperts/auth.guard';
-import {OnboardingGuard} from '../_helperts/onboarding.guard';
+import {QuestionnaireGuard} from '../_helperts/questionaire.guard';
+import {SelectAccountGuard} from '../_helperts/selectAccount';
 
 @Injectable()
 export class AccountTypesResolver implements Resolve<any> {
@@ -72,7 +73,7 @@ export const ONBOARDING_ROUTES: Routes = [
     resolve: {
       questionnaire: QuestionsResolver,
     },
-    canActivate: [AuthGuard, OnboardingGuard]
+    canActivate: [AuthGuard, QuestionnaireGuard]
   },
   {
     path: 'choose-account-type',
@@ -80,7 +81,7 @@ export const ONBOARDING_ROUTES: Routes = [
     resolve: {
       accountTypes: AccountTypesResolver
     },
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard, SelectAccountGuard]
   },
   {
     path: 'portfolio-recommendation',
@@ -89,6 +90,6 @@ export const ONBOARDING_ROUTES: Routes = [
       suggestedAllocation: SuggestedAllocationResolver,
       questionnaire: QuestionsResolver,
     },
-    canActivate: [AuthGuard, OnboardingGuard]
+    canActivate: [AuthGuard, QuestionnaireGuard]
   },
 ];

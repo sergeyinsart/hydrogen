@@ -24,15 +24,13 @@ export class JwtInterceptor implements HttpInterceptor {
     const isLoggedIn = this.authService.passwordToken;
     const isApiUrl = request.url.startsWith(environment.apiUrl);
     const isClientCred = request.url.startsWith(environment.apiUrl + '/nucleus/v1/node')
-      || request.url.startsWith(environment.apiUrl + '/nucleus/v1/model');
+      || request.url.startsWith(environment.apiUrl + '/nucleus/v1/model')
+      || request.url.startsWith(environment.apiUrl + '/nucleus/v1/client');
 
-    if (isLoggedIn && isApiUrl) {
-      if (isClientCred) {
-        request = JwtInterceptor.generateHeader(request, this.authService.clientCredToken);
-      } else {
-        request = JwtInterceptor.generateHeader(request, this.authService.passwordToken);
-      }
-
+    if (isClientCred) {
+      request = JwtInterceptor.generateHeader(request, this.authService.clientCredToken);
+    } else if (isLoggedIn && isApiUrl) {
+      request = JwtInterceptor.generateHeader(request, this.authService.passwordToken);
     }
 
     return next.handle(request);

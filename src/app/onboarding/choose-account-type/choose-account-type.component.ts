@@ -3,6 +3,9 @@ import {OnboardingService} from '../onboarding.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AccountType} from '../onboarding';
 import {MatSnackBar} from '@angular/material';
+import {AuthService} from '../../auth/auth.service';
+import {Account} from '../../auth/user';
+import * as _update from 'lodash/update';
 
 @Component({
   selector: 'app-choose-account-type',
@@ -17,7 +20,8 @@ export class ChooseAccountTypeComponent implements OnInit {
     private onboardingService: OnboardingService,
     private route: ActivatedRoute,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private auth: AuthService
   ) {
     this.accountTypes = route.snapshot.data.accountTypes.content;
 
@@ -32,6 +36,12 @@ export class ChooseAccountTypeComponent implements OnInit {
 
   selectAccountType(accountType: AccountType) {
     this.onboardingService.createAccount(accountType)
+      .then((account: Account) => {
+        const updatedUser = {...this.auth.currentUser};
+        _update(updatedUser, 'metadata.accountId', () => account.id);
+
+        return this.auth.updateUser(updatedUser);
+      })
       .then(() => {
         this.router.navigate(['/questionnaire']);
       })

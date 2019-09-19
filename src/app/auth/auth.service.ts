@@ -8,6 +8,7 @@ import {Router} from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
+  private clientAccount: Account;
   constructor(
     private http: HttpClient,
     private router: Router
@@ -19,7 +20,6 @@ export class AuthService {
   currentUser: User;
   passwordToken: string;
   clientCredToken: string;
-  clientAccount: Account;
 
   private static generateHeader(authString) {
     return {
@@ -31,11 +31,22 @@ export class AuthService {
   createUser(userData: User) {
     const url = `${environment.apiUrl}/nucleus/v1/client`;
 
-    const header = AuthService.generateHeader(`Bearer ${environment.clientCredentialsToken  }`);
-
-    return this.http.post(url, userData, header).toPromise()
+    return this.http.post(url, userData).toPromise()
       .then((user: User) => {
         this.currentUser = user;
+
+        return user;
+      });
+  }
+
+  updateUser(userData: User) {
+    const url = `${environment.apiUrl}/nucleus/v1/client/${this.currentUser.id}`;
+    delete userData.id;
+
+    return this.http.put(url, userData).toPromise()
+      .then((user: User) => {
+        this.currentUser = user;
+        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
 
         return user;
       });
@@ -106,7 +117,6 @@ export class AuthService {
 
   logout() {
     this.currentUser = null;
-    this.clientAccount = null;
     this.passwordToken = null;
 
     localStorage.clear();

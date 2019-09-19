@@ -17,8 +17,12 @@ export class User {
   last_name = '';
   phone_number = '';
   address: Address[];
-  id: string;
+  id?: string;
   token?: string;
+  metadata: {
+    hasPortfolio?: boolean;
+    accountId?: string;
+  };
   constructor() {}
 }
 
