@@ -13,7 +13,7 @@
 
       <div *ngIf="question.question_type === 'radio'">
         <mat-radio-group aria-label="Select an option" [formControlName]="question.id">
-          <mat-radio-button [value]="answer.id" class="vertical-radio" value="1" *ngFor="let answer of question.answers">{{answer.label}}</mat-radio-button>
+          <mat-radio-button [value]="answer.value" class="vertical-radio" value="1" *ngFor="let answer of question.answers">{{answer.label}}</mat-radio-button>
         </mat-radio-group>
       </div>
 

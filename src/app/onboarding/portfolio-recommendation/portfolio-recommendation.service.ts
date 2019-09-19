@@ -1,25 +1,20 @@
 import { Injectable } from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
-import {Allocation, Answer, ClientResponse, DecigionNode, ModelHolding, NodeRelationship, Question, Securitie} from '../onboarding';
+import {Allocation, ClientResponse, DecigionNode, ModelHolding, NodeRelationship, Securitie} from '../onboarding';
 import {OnboardingService} from '../onboarding.service';
 import {QuestionnaireService} from '../questionnaire/questionnaire.service';
-
-const timeHorizonQuestionId = '6f04bfb3-02b6-4716-bea4-90b545129d89';
-const riskProfileQuestionId = 'caef1b6a-e2cc-4325-abd8-b20e1f978ff8';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PortfolioRecommendationService {
-  private clientResponses: ClientResponse[];
   private nodes: DecigionNode[];
   private nodeRelationship: NodeRelationship[];
-  finalNodeId = '427aca5b-9ea1-4a5f-8594-ee5f11ce4a75';
   suggestedModelHolding: ModelHolding[];
   suggestedSecurities: Securitie[];
   suggestedAllocation: Allocation;
-  // finalNodeId: string;
+  finalNodeId: string;
 
   constructor(
     private http: HttpClient,
@@ -73,21 +68,12 @@ export class PortfolioRecommendationService {
     }
   }
 
-  // TODO need to change this logic to use "secondary_id" and avoid loading questionnaire
-  getTimeHorizonAnswer(questions: Question[]): Answer {
-    const question = questions.find(q => q.id === timeHorizonQuestionId);
-
-    return question.answers.find(a => {
-      return !!this.questionnaireService.clientResponses.find(c => c.answer_id === a.id);
-    });
+  getTimeHorizonResponse(): ClientResponse {
+    return this.questionnaireService.clientResponses.find(q => q.secondary_id === 'timeHorizon');
   }
 
-  getTimeRiskProfileAnswer(questions: Question[]): Answer {
-    const question = questions.find(q => q.id === riskProfileQuestionId);
-
-    return question.answers.find(a => {
-      return !!this.questionnaireService.clientResponses.find(c => c.answer_id === a.id);
-    });
+  getTimeRiskProfileResponse(): ClientResponse {
+    return this.questionnaireService.clientResponses.find(q => q.secondary_id === 'riskProfile');
   }
 
   getAllocationCompositionByAllocationId(allocationId) {

@@ -23,11 +23,11 @@ export interface AccountType {
 
 export interface Answer {
   id: string;
-  value: string;
-  label: string;
-  image: string;
-  weight: number;
-  is_default: boolean;
+  value?: string;
+  label?: string;
+  image?: string;
+  weight?: number;
+  is_default?: boolean;
   metadata: any;
 }
 
@@ -44,6 +44,7 @@ export interface Question {
   is_account: boolean;
   answers: Answer[];
   metadata: any;
+  secondary_id?: string;
 }
 
 export interface ClientResponse {
@@ -54,6 +55,7 @@ export interface ClientResponse {
   answer_id?: string;
   answer_value?: string;
   metadata?: any;
+  secondary_id?: string;
 }
 
 export interface DecigionNode {

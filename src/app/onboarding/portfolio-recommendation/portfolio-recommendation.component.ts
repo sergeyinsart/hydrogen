@@ -6,6 +6,18 @@ import {Label} from 'ng2-charts';
 import {AuthService} from '../../auth/auth.service';
 import {MatSnackBar} from '@angular/material';
 
+const timeHorizonLabels = {
+  '&gt;20 years': 'greater than 20 years',
+  '10-20 years': '10-20 years',
+  '&lt;10 years': 'less than 10 years'
+};
+
+const riskLevelLabels = {
+  conservative: 'conservative',
+  aggressive: 'aggressive',
+  moderate: 'moderate',
+};
+
 @Component({
   selector: 'app-portfolio-recommendation',
   templateUrl: './portfolio-recommendation.component.html',
@@ -23,10 +35,9 @@ export class PortfolioRecommendationComponent implements OnInit {
   ) {
     this.suggestedAllocation = route.snapshot.data.suggestedAllocation;
     this.clientResponse = route.snapshot.data.clientResponse;
-    const questions = route.snapshot.data.questionnaire.questions;
 
-    this.timeHorizonLabel = portfolioRecommendationService.getTimeHorizonAnswer(questions).label;
-    this.reskLevelLabel = portfolioRecommendationService.getTimeRiskProfileAnswer(questions).label;
+    this.timeHorizonLabel = timeHorizonLabels[portfolioRecommendationService.getTimeHorizonResponse().answer_value];
+    this.reskLevelLabel = riskLevelLabels[portfolioRecommendationService.getTimeRiskProfileResponse().answer_value];
 
 
     this.pieChartData = this.suggestedAllocation.map(a => a.weight);

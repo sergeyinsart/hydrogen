@@ -45,13 +45,16 @@ export class QuestionnaireComponent implements OnInit {
   }
 
   nextStep(question: Question) {
-    const answerId = this.form.value[question.id];
+    const answerValue = this.form.value[question.id];
+    const answerObj = question.answers.length > 1 ? question.answers.find(a => a.value === answerValue) : question.answers[0];
+    const answerId = answerObj.id;
 
     if (question.answers.length > 0) {
       const response: ClientResponse = {
         client_id: this.authService.currentUser.id,
         answer_id: answerId,
-        answer_value: question.answers.find(a => a.id === answerId).value
+        answer_value: answerValue,
+        secondary_id: question.metadata.secondary_id,
       };
 
       this.questionnaireService.createClientResponse(response)
