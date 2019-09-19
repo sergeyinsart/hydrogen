@@ -157,9 +157,10 @@ export class PortfolioRecommendationService {
         return data.modelHolding.map((m) => {
           const security = data.securities.find(s => s.id === m.security_id);
           return {
-            strategic_weight: m.strategic_weight,
+            weight: m.current_weight,
             securityName: security.name,
             ticker: security.ticker,
+            securityId: security.id,
           };
         });
       });
@@ -186,6 +187,20 @@ export class PortfolioRecommendationService {
       asset_size: 10000,
       cash_flow: 10000,
       portfolio_id: portfolioId
+    };
+
+    return this.http.post(url, data).toPromise();
+  }
+
+  createPortfolioHoldings(portfolioId, securityId, weight) {
+    const url = `${environment.apiUrl}/nucleus/v1/portfolio_holding`;
+
+    const data = {
+      date: new Date(),
+      portfolio_id: portfolioId,
+      security_id: securityId,
+      shares: 1,
+      weight
     };
 
     return this.http.post(url, data).toPromise();

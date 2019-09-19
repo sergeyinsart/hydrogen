@@ -1,1 +1,26 @@
-<p>dashboard works!</p>
+<p>Current Balance: {{assetSize}}</p>
+
+<div style="display: block">
+  <canvas baseChart
+          [data]="pieChartData"
+          [labels]="pieChartLabels"
+          chartType="pie">
+  </canvas>
+</div>
+
+<table>
+  <thead>
+  <tr>
+    <td>Asset Classes</td>
+    <td>Weight</td>
+    <td>Balance</td>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let assetClass of assetClasses">
+    <td>{{assetClass.asset_class}}</td>
+    <td>{{assetClass.weight}}%</td>
+    <td>{{assetClass.balance | currency}}</td>
+  </tr>
+  </tbody>
+</table>

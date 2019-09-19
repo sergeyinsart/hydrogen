@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
 
     this.auth.login(this.form.value.username, this.form.value.password)
       .then(() => {
-        return this.router.navigate(['/']);
+        return this.router.navigate(['/dashboard']);
       })
       .catch(() => {
         this.snackBar.open('Error');

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ClientResponse, PortfolioRecommendation} from '../onboarding';
 import {PortfolioRecommendationService} from './portfolio-recommendation.service';
 import {Label} from 'ng2-charts';
@@ -18,7 +18,8 @@ export class PortfolioRecommendationComponent implements OnInit {
     route: ActivatedRoute,
     private portfolioRecommendationService: PortfolioRecommendationService,
     private auth: AuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {
     this.suggestedAllocation = route.snapshot.data.suggestedAllocation;
     this.clientResponse = route.snapshot.data.clientResponse;
@@ -28,7 +29,7 @@ export class PortfolioRecommendationComponent implements OnInit {
     this.reskLevelLabel = portfolioRecommendationService.getTimeRiskProfileAnswer(questions).label;
 
 
-    this.pieChartData = this.suggestedAllocation.map(a => a.strategic_weight);
+    this.pieChartData = this.suggestedAllocation.map(a => a.weight);
     this.pieChartLabels = this.suggestedAllocation.map(a => a.securityName);
   }
   private suggestedAllocation: any[];
@@ -49,10 +50,25 @@ export class PortfolioRecommendationComponent implements OnInit {
     this.portfolioRecommendationService.subscribeAccount(accountId, allocationId)
       .then((data: PortfolioRecommendation[]) => {
         const portfolio = data[0];
-        return this.portfolioRecommendationService.createAssetSize(portfolio.id);
+        const promises = [
+          this.portfolioRecommendationService.createAssetSize(portfolio.id),
+          this.createPortfolioHoldings(portfolio.id)
+        ];
+        return Promise.all(promises);
+      })
+      .then(() => {
+        return this.router.navigate(['/dashboard']);
       })
       .catch(() => {
         this.snackBar.open('error');
       });
+  }
+
+  createPortfolioHoldings(portfolioId) {
+    const holdingPromises = this.suggestedAllocation.map(a => {
+      return this.portfolioRecommendationService.createPortfolioHoldings(portfolioId, a.securityId, a.weight);
+    });
+
+    return Promise.all(holdingPromises);
   }
 }

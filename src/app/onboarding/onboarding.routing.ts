@@ -72,7 +72,7 @@ export const ONBOARDING_ROUTES: Routes = [
     resolve: {
       questionnaire: QuestionsResolver,
     },
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard, OnboardingGuard]
   },
   {
     path: 'choose-account-type',
