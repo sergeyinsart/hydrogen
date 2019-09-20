@@ -17,7 +17,7 @@ export class QuestionnaireGuard implements CanActivate {
     return this.auth.getClient()
       .then(() => {
         if (!this.auth.currentUser.metadata.accountId) {
-          this.auth.logout();
+          this.router.navigate(['/choose-account-type']);
           return false;
         } else {
           return true;

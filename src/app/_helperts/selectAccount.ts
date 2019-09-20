@@ -14,8 +14,8 @@ export class SelectAccountGuard implements CanActivate {
   canActivate() {
     return this.auth.getClient()
       .then(() => {
-        if (!this.auth.currentUser.metadata.accountId) {
-          this.router.navigate(['/choose-account-type']);
+        if (!this.auth.currentUser) {
+          this.auth.logout();
           return false;
         } else {
           return true;

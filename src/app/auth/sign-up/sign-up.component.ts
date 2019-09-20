@@ -40,9 +40,11 @@ export class SignUpComponent implements OnInit {
     this.authService.createUser(newUser)
       .then(() => {
         this.snackBar.open('Success');
-        this.router.navigate(['/login']);
 
         return this.authService.createPassword(newUser.username, this.authForm.value.password);
+      })
+      .then(() => {
+        return this.router.navigate(['/login']);
       })
       .catch(() => {
         this.snackBar.open('Error');
