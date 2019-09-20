@@ -40,6 +40,7 @@ export class PortfolioRecommendationComponent implements OnInit {
   pieChartData: number[];
   private timeHorizonNumLabel: { '&gt;20 years': number; '&lt;10 years': number; '10-20 years': number };
   private projectedGrowth: number;
+  private investAmount: number;
 
   constructor(
     route: ActivatedRoute,
@@ -53,6 +54,9 @@ export class PortfolioRecommendationComponent implements OnInit {
 
     const timeHorizonResponse = portfolioRecommendationService.getResponse('timeHorizon');
     const riskLevelResponse = portfolioRecommendationService.getResponse('riskProfile');
+    const investResponse = portfolioRecommendationService.getResponse('invest');
+
+    this.investAmount = parseInt(investResponse.answer_value, 0);
 
     this.timeHorizonLabel = timeHorizonLabels[timeHorizonResponse.answer_value];
     this.riskLevelLabel = riskLevelLabels[riskLevelResponse.answer_value];
@@ -63,7 +67,7 @@ export class PortfolioRecommendationComponent implements OnInit {
 
     this.timeHorizonNumLabel = timeHorizonNumLabels[timeHorizonResponse.answer_value];
 
-    this.projectedGrowth = portfolioRecommendationService.calculateGrowth(10000, 10, rates[riskLevelResponse.answer_value]);
+    this.projectedGrowth = portfolioRecommendationService.calculateGrowth(this.investAmount, 10, rates[riskLevelResponse.answer_value]);
   }
   private suggestedAllocation: any[];
   clientResponse: ClientResponse[];
@@ -84,7 +88,7 @@ export class PortfolioRecommendationComponent implements OnInit {
       .then((data: PortfolioRecommendation[]) => {
         const portfolio = data[0];
         const promises = [
-          this.portfolioRecommendationService.createAssetSize(portfolio.id),
+          this.portfolioRecommendationService.createAssetSize(portfolio.id, this.investAmount),
           this.createPortfolioHoldings(portfolio.id)
         ];
         return Promise.all(promises);

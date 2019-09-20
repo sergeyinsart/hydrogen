@@ -162,13 +162,13 @@ export class PortfolioRecommendationService {
     return this.http.post(url, data).toPromise();
   }
 
-  createAssetSize(portfolioId) {
+  createAssetSize(portfolioId, amount) {
     const url = `${environment.apiUrl}/nucleus/v1/portfolio_asset_size`;
 
     const data = {
       date: new Date(),
-      asset_size: 10000,
-      cash_flow: 10000,
+      asset_size: amount,
+      cash_flow: amount,
       portfolio_id: portfolioId
     };
 
