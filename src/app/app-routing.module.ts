@@ -3,10 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import {LoginComponent} from './auth/login/login.component';
 import {SignUpComponent} from './auth/sign-up/sign-up.component';
 import {ONBOARDING_ROUTES} from './onboarding/onboarding.routing';
-import {AuthGuard} from './_helperts/auth.guard';
 import {DASHBOARD_ROUTES} from './dashboard/dashboard.routing';
-import {DashboardComponent} from './dashboard/dashboard/dashboard.component';
-import {AppGuard} from './_helperts/app.guard';
 
 const routes: Routes = [
   {
@@ -19,8 +16,8 @@ const routes: Routes = [
   },
   {
     path: '',
-    component: DashboardComponent,
-    canActivate: [AuthGuard, AppGuard]
+    redirectTo: 'dashboard',
+    pathMatch: 'full'
   },
   ...ONBOARDING_ROUTES,
   ...DASHBOARD_ROUTES,

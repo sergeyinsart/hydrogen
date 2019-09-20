@@ -16,7 +16,7 @@ export class AppGuard implements CanActivate {
   canActivate() {
     return this.auth.getClient()
       .then(() => {
-        if (!this.auth.currentUser.metadata.hasPortfolio) {
+        if (!this.auth.currentUser.metadata.portfolioId) {
           this.router.navigate(['/questionnaire']);
           return false;
         } else {

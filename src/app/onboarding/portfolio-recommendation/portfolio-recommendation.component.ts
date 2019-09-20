@@ -84,9 +84,10 @@ export class PortfolioRecommendationComponent implements OnInit {
   subscribeAccount() {
     const accountId = this.auth.currentUser.metadata.accountId;
     const allocationId = this.portfolioRecommendationService.suggestedAllocation.id;
+    let portfolio;
     this.portfolioRecommendationService.subscribeAccount(accountId, allocationId)
       .then((data: PortfolioRecommendation[]) => {
-        const portfolio = data[0];
+        portfolio = data[0];
         const promises = [
           this.portfolioRecommendationService.createAssetSize(portfolio.id, this.investAmount),
           this.createPortfolioHoldings(portfolio.id)
@@ -95,7 +96,7 @@ export class PortfolioRecommendationComponent implements OnInit {
       })
       .then(() => {
         const updatedUser = {...this.auth.currentUser};
-        _update(updatedUser, 'metadata.hasPortfolio', () => true);
+        _update(updatedUser, 'metadata.portfolioId', () => portfolio.id);
 
         return this.auth.updateUser(updatedUser);
       })

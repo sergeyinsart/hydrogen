@@ -20,7 +20,7 @@ export class User {
   id?: string;
   token?: string;
   metadata: {
-    hasPortfolio?: boolean;
+    portfolioId?: string;
     accountId?: string;
   };
   constructor() {}

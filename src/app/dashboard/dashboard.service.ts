@@ -22,9 +22,12 @@ export class DashboardService {
     ) { }
 
   getHoldings(accountId) {
-    const url = `${environment.apiUrl}/nucleus/v1/account/${accountId}/holding`;
+    const url = `${environment.apiUrl}/nucleus/v1/portfolio_holding?filter=portfolio_id==${accountId}`;
 
-    return this.http.get(url).toPromise();
+    return this.http.get(url).toPromise()
+      .then((data: any) => {
+        return data.content;
+      });
   }
 
   getAssetSize(accountId) {
@@ -48,7 +51,7 @@ export class DashboardService {
             name: s.name,
             asset_class: s.asset_class,
             ticker: s.ticker,
-            weight: holdings.find(h => h.security_id === s.id).current_weight
+            weight: holdings.find(h => h.security_id === s.id).weight
           };
         });
       });
