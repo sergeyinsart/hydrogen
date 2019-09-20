@@ -1,23 +1,20 @@
-<h1>Lest's review your customized portfolio.</h1>
-<ol>
-  <li>
-    <h2>Moderate Growth</h2>
-    Your time horizon is {{timeHorizonLabel | lowercase}}
-  </li>
-  <li>
-    Projected growth in {{timeHorizonNumLabel}} Years {{projectedGrowth | currency}}
-  </li>
-  <li>
-    Risk Level - {{riskLevelLabel}}
-  </li>
-</ol>
+<div class="container">
+  <h2 class="text-center">Lest's review your customized portfolio.</h2>
+  <hr>
+  <p>Your time horizon is <span class="badge badge-primary"><{{timeHorizonLabel | lowercase}}</span></p>
+  <p>Projected growth in {{timeHorizonNumLabel}} Years <span class="badge badge-primary">{{projectedGrowth | currency}}</span></p>
+  <p>Risk Level - <span class="badge badge-primary">{{riskLevelLabel}}</span></p>
 
-<div style="display: block">
-<canvas baseChart
-        [data]="pieChartData"
-        [labels]="pieChartLabels"
-        chartType="pie">
-</canvas>
+  <div class="dashboard-chart">
+    <canvas baseChart
+            [data]="pieChartData"
+            [labels]="pieChartLabels"
+            chartType="pie">
+    </canvas>
+  </div>
+
+  <div class="text-center">
+    <button (click)="subscribeAccount()" type="button" mat-raised-button color="primary">Create Portfolio</button>
+  </div>
+
 </div>
-
-<button (click)="subscribeAccount()" type="button" mat-raised-button color="primary">Create Portfolio</button>

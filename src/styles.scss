@@ -2,3 +2,32 @@
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 @import 'bootstrap/dist/css/bootstrap.css';
+
+a {
+  cursor: pointer;
+}
+
+.navbar-brand {
+  .mat-icon {
+    vertical-align: middle;
+  }
+}
+
+.navbar {
+  margin-bottom: 20px;
+}
+
+.auth-container {
+  margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 500px;
+}
+
+.dashboard-chart {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 700px;
+  margin-bottom: 30px;
+  margin-top: 30px;
+}

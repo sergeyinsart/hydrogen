@@ -5,6 +5,12 @@
 .selectCard {
   height: 150px;
   text-align: center;
+  cursor: pointer;
+  .mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+  }
 }
 
 .mat-card-title {

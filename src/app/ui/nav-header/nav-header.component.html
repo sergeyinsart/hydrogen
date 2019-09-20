@@ -1,3 +1,9 @@
-<div class="nav-header">
-  <mat-icon>perm_identity</mat-icon> {{userName}} | <a (click)="logout()">Logout</a>
-</div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <span class="navbar-brand"><mat-icon>perm_identity</mat-icon> {{userName}}</span>
+
+  <ul class="navbar-nav ml-auto my-2 my-lg-0">
+    <li class="nav-item">
+      <a class="nav-link" (click)="logout()">Logout</a>
+    </li>
+  </ul>
+</nav>

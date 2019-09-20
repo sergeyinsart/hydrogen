@@ -1,26 +1,27 @@
-<p>Current Balance: {{assetSize | currency}}</p>
+<div class="container">
+  <h3 class="text-center">Current Balance: <span class="badge badge-secondary">{{assetSize | currency}}</span></h3>
+  <div class="dashboard-chart">
+    <canvas baseChart
+            [data]="pieChartData"
+            [labels]="pieChartLabels"
+            chartType="pie">
+    </canvas>
+  </div>
 
-<div style="display: block">
-  <canvas baseChart
-          [data]="pieChartData"
-          [labels]="pieChartLabels"
-          chartType="pie">
-  </canvas>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Asset Classes</th>
+      <th>Weight</th>
+      <th>Balance</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let assetClass of assetClasses">
+      <td>{{assetClass.asset_class}}</td>
+      <td>{{assetClass.weight}}%</td>
+      <td>{{assetClass.balance | currency}}</td>
+    </tr>
+    </tbody>
+  </table>
 </div>
-
-<table>
-  <thead>
-  <tr>
-    <td>Asset Classes</td>
-    <td>Weight</td>
-    <td>Balance</td>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let assetClass of assetClasses">
-    <td>{{assetClass.asset_class}}</td>
-    <td>{{assetClass.weight}}%</td>
-    <td>{{assetClass.balance | currency}}</td>
-  </tr>
-  </tbody>
-</table>
