@@ -1,6 +1,6 @@
 <form (ngSubmit)="submit()" [formGroup]="form">
   <mat-horizontal-stepper #stepper linear>
-    <mat-step *ngFor="let question of questions" [label]="question.title">
+    <mat-step [completed]="form.controls[question.id].status === 'VALID'" *ngFor="let question of questions" [label]="question.title">
       <h2>{{question.title}}</h2>
       <mat-form-field *ngIf="question.question_type === 'monetary'">
         <input type="number" matInput min="0" [formControlName]="question.id">
@@ -24,5 +24,3 @@
     </mat-step>
   </mat-horizontal-stepper>
 </form>
-
-<button (click)="defineAllocation()">Define</button>

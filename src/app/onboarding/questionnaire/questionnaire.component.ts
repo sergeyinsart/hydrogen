@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {ClientResponse, Question} from '../onboarding';
 import {MatHorizontalStepper, MatSnackBar} from '@angular/material';
 import * as _sortBy from 'lodash/sortBy';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../auth/auth.service';
 import {QuestionnaireService} from './questionnaire.service';
 
@@ -34,7 +34,7 @@ export class QuestionnaireComponent implements OnInit {
     const group: any = {};
 
     this.questions.forEach(question => {
-      group[question.id] = new FormControl('');
+      group[question.id] = new FormControl('', Validators.required);
     });
 
     this.form =  new FormGroup(group);
@@ -45,32 +45,35 @@ export class QuestionnaireComponent implements OnInit {
   }
 
   nextStep(question: Question) {
+    const currentStepControl = this.form.controls[question.id];
+    if (currentStepControl.status !== 'VALID') {
+      this.stepper.next();
+
+      return;
+    }
+
     const answerValue = this.form.value[question.id];
-    const answerObj = question.answers.length > 1 ? question.answers.find(a => a.value === answerValue) : question.answers[0];
+    const answerObj = question.question_type === 'radio' ? question.answers.find(a => a.value === answerValue) : question.answers[0];
     const answerId = answerObj.id;
 
-    if (question.answers.length > 0) {
-      const response: ClientResponse = {
-        client_id: this.authService.currentUser.id,
-        answer_id: answerId,
-        answer_value: answerValue,
-        secondary_id: question.metadata.secondary_id,
-      };
+    const response: ClientResponse = {
+      client_id: this.authService.currentUser.id,
+      answer_id: answerId,
+      answer_value: answerValue,
+      secondary_id: question.metadata.secondary_id,
+    };
 
-      this.questionnaireService.createClientResponse(response)
-        .then(() => {
-          this.stepper.next();
-        })
-        .catch(() => {
-          // TODO - correct error message
-          this.snackBar.open('error');
-        });
-    } else {
-      this.stepper.next();
-    }
+    this.questionnaireService.createClientResponse(response)
+      .then(() => {
+        this.form.status === 'INVALID' ? this.stepper.next() : this.defineAllocation();
+      })
+      .catch(() => {
+        // TODO - correct error message
+        this.snackBar.open('error');
+      });
   }
 
-  defineAllocation() {
+  private defineAllocation() {
     this.router.navigate(['/portfolio-recommendation']);
   }
 }
