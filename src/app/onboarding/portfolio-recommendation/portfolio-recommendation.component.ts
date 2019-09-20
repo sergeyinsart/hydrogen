@@ -13,10 +13,22 @@ const timeHorizonLabels = {
   '&lt;10 years': 'less than 10 years'
 };
 
+const timeHorizonNumLabels = {
+  '&gt;20 years': 25,
+  '10-20 years': 15,
+  '&lt;10 years': 10
+};
+
 const riskLevelLabels = {
   conservative: 'conservative',
   aggressive: 'aggressive',
   moderate: 'moderate',
+};
+
+const rates = {
+  conservative: 10,
+  aggressive: 30,
+  moderate: 50,
 };
 
 @Component({
@@ -25,7 +37,9 @@ const riskLevelLabels = {
   styleUrls: ['./portfolio-recommendation.component.scss']
 })
 export class PortfolioRecommendationComponent implements OnInit {
-  private pieChartData: number[];
+  pieChartData: number[];
+  private timeHorizonNumLabel: { '&gt;20 years': number; '&lt;10 years': number; '10-20 years': number };
+  private projectedGrowth: number;
 
   constructor(
     route: ActivatedRoute,
@@ -37,17 +51,24 @@ export class PortfolioRecommendationComponent implements OnInit {
     this.suggestedAllocation = route.snapshot.data.suggestedAllocation;
     this.clientResponse = route.snapshot.data.clientResponse;
 
-    this.timeHorizonLabel = timeHorizonLabels[portfolioRecommendationService.getTimeHorizonResponse().answer_value];
-    this.reskLevelLabel = riskLevelLabels[portfolioRecommendationService.getTimeRiskProfileResponse().answer_value];
+    const timeHorizonResponse = portfolioRecommendationService.getResponse('timeHorizon');
+    const riskLevelResponse = portfolioRecommendationService.getResponse('riskProfile');
+
+    this.timeHorizonLabel = timeHorizonLabels[timeHorizonResponse.answer_value];
+    this.riskLevelLabel = riskLevelLabels[riskLevelResponse.answer_value];
 
 
     this.pieChartData = this.suggestedAllocation.map(a => a.weight);
     this.pieChartLabels = this.suggestedAllocation.map(a => a.securityName);
+
+    this.timeHorizonNumLabel = timeHorizonNumLabels[timeHorizonResponse.answer_value];
+
+    this.projectedGrowth = portfolioRecommendationService.calculateGrowth(10000, 10, rates[riskLevelResponse.answer_value]);
   }
   private suggestedAllocation: any[];
-  private clientResponse: ClientResponse[];
+  clientResponse: ClientResponse[];
   private timeHorizonLabel: string;
-  private reskLevelLabel: string;
+  private riskLevelLabel: string;
 
   pieChartLabels: Label[];
 

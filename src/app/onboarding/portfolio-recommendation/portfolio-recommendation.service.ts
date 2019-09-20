@@ -4,6 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {Allocation, ClientResponse, DecigionNode, ModelHolding, NodeRelationship, Securitie} from '../onboarding';
 import {OnboardingService} from '../onboarding.service';
 import {QuestionnaireService} from '../questionnaire/questionnaire.service';
+import {Finance} from 'financejs';
 
 @Injectable({
   providedIn: 'root'
@@ -68,12 +69,8 @@ export class PortfolioRecommendationService {
     }
   }
 
-  getTimeHorizonResponse(): ClientResponse {
-    return this.questionnaireService.clientResponses.find(q => q.secondary_id === 'timeHorizon');
-  }
-
-  getTimeRiskProfileResponse(): ClientResponse {
-    return this.questionnaireService.clientResponses.find(q => q.secondary_id === 'riskProfile');
+  getResponse(question): ClientResponse {
+    return this.questionnaireService.clientResponses.find(q => q.secondary_id === question);
   }
 
   getAllocationCompositionByAllocationId(allocationId) {
@@ -190,6 +187,11 @@ export class PortfolioRecommendationService {
     };
 
     return this.http.post(url, data).toPromise();
+  }
+
+  calculateGrowth(amount, years, rate) {
+    const finance = new Finance();
+    return finance.CI(rate, years, amount, years );
   }
 
 }
