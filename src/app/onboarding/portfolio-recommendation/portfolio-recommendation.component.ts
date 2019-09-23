@@ -97,7 +97,9 @@ export class PortfolioRecommendationComponent implements OnInit {
     const accountId = this.auth.currentUser.metadata.accountId;
     const allocationId = this.portfolioRecommendationService.suggestedAllocation.id;
 
+
     this.subscribeAccountFn(accountId, allocationId)
+    // @ts-ignore
       .then((portfolioId: string) => {
         this.createPortfolioProgress.portfolioId = portfolioId;
 
@@ -123,6 +125,7 @@ export class PortfolioRecommendationComponent implements OnInit {
     let holdingPromises = Promise.resolve();
 
     for (const a of this.suggestedAllocation) {
+      // @ts-ignore
       holdingPromises = holdingPromises.then(() => {
         return this.portfolioRecommendationService.createPortfolioHoldings(portfolioId, a.securityId, a.weight);
       });
