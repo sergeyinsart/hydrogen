@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
-import {Allocation, ClientResponse, DecigionNode, ModelHolding, NodeRelationship, Securitie} from '../onboarding';
+import {Allocation, ClientResponse, DecigionNode, ModelHolding, NodeRelationship, PortfolioRecommendation, Securitie} from '../onboarding';
 import {OnboardingService} from '../onboarding.service';
 import {QuestionnaireService} from '../questionnaire/questionnaire.service';
 import {Finance} from 'financejs';
@@ -149,7 +149,7 @@ export class PortfolioRecommendationService {
       });
   }
 
-  subscribeAccount(accountId, allocationId) {
+  subscribeAccount(accountId, allocationId): Promise<any> {
     const url = `${environment.apiUrl}/nucleus/v1/account/${accountId}/subscribe`;
 
     const data = {

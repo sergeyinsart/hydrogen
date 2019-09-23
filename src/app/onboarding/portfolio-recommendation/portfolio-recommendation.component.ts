@@ -31,6 +31,17 @@ const rates = {
   moderate: 50,
 };
 
+class CreatePortfolioProgress {
+  constructor(metadata) {
+    this.portfolioId = metadata.portfolioId;
+    this.setAssetSize = metadata.setAssetSize;
+    this.createPortfolioHolders = metadata.createPortfolioHolders;
+  }
+  portfolioId: string;
+  setAssetSize: boolean;
+  createPortfolioHolders: boolean;
+}
+
 @Component({
   selector: 'app-portfolio-recommendation',
   templateUrl: './portfolio-recommendation.component.html',
@@ -40,7 +51,8 @@ export class PortfolioRecommendationComponent implements OnInit {
   pieChartData: number[];
   private timeHorizonNumLabel: { '&gt;20 years': number; '&lt;10 years': number; '10-20 years': number };
   private projectedGrowth: number;
-  private investAmount: number;
+  investAmount: number;
+  createPortfolioProgress: CreatePortfolioProgress = new CreatePortfolioProgress(this.auth.currentUser.metadata);
 
   constructor(
     route: ActivatedRoute,
@@ -84,27 +96,26 @@ export class PortfolioRecommendationComponent implements OnInit {
   subscribeAccount() {
     const accountId = this.auth.currentUser.metadata.accountId;
     const allocationId = this.portfolioRecommendationService.suggestedAllocation.id;
-    let portfolio;
-    this.portfolioRecommendationService.subscribeAccount(accountId, allocationId)
-      .then((data: PortfolioRecommendation[]) => {
-        portfolio = data[0];
+
+    this.subscribeAccountFn(accountId, allocationId)
+      .then((portfolioId) => {
+        this.createPortfolioProgress.portfolioId = portfolioId;
         const promises = [
-          this.portfolioRecommendationService.createAssetSize(portfolio.id, this.investAmount),
-          this.createPortfolioHoldings(portfolio.id)
+          this.createAssetSizeFn(this.createPortfolioProgress.portfolioId, this.investAmount),
+          this.createPortfolioHoldingsFn(this.createPortfolioProgress.portfolioId)
         ];
         return Promise.all(promises);
       })
       .then(() => {
-        const updatedUser = {...this.auth.currentUser};
-        _update(updatedUser, 'metadata.portfolioId', () => portfolio.id);
-
-        return this.auth.updateUser(updatedUser);
+        return this.saveCreatePortfolioProgress();
       })
       .then(() => {
         return this.router.navigate(['/dashboard']);
       })
       .catch(() => {
-        this.snackBar.open('error');
+        this.snackBar.open('An error occurs while creating portfolio. Try one more time pls.');
+
+        return this.saveCreatePortfolioProgress();
       });
   }
 
@@ -114,5 +125,54 @@ export class PortfolioRecommendationComponent implements OnInit {
     });
 
     return Promise.all(holdingPromises);
+  }
+
+  private saveCreatePortfolioProgress() {
+    const updatedUser = {...this.auth.currentUser};
+    _update(updatedUser, 'metadata.portfolioId', () => this.createPortfolioProgress.portfolioId);
+    _update(updatedUser, 'metadata.createPortfolioHolders', () => this.createPortfolioProgress.createPortfolioHolders);
+    _update(updatedUser, 'metadata.setAssetSize', () => this.createPortfolioProgress.setAssetSize);
+
+    return this.auth.updateUser(updatedUser);
+  }
+
+  private subscribeAccountFn(accountId, allocationId) {
+    return this.createPortfolioProgress.portfolioId
+      ? Promise.resolve(this.createPortfolioProgress.portfolioId)
+      : this.portfolioRecommendationService.subscribeAccount(accountId, allocationId)
+        .then((data) => {
+          return data[0].id;
+        });
+  }
+
+  private createAssetSizeFn(portfolioId, investAmount): Promise<void | any> {
+    return this.createPortfolioProgress.setAssetSize
+      ? Promise.resolve()
+      : this.portfolioRecommendationService.createAssetSize(portfolioId, investAmount)
+        .then((data) => {
+          this.createPortfolioProgress.setAssetSize = true;
+
+          return data;
+        })
+        .catch((error) => {
+          this.createPortfolioProgress.setAssetSize = false;
+
+          return Promise.reject(error);
+        });
+  }
+
+  private createPortfolioHoldingsFn(portfolioId) {
+    return this.createPortfolioProgress.createPortfolioHolders
+      ? Promise.resolve()
+      : this.createPortfolioHoldings(portfolioId)
+        .then((data) => {
+          this.createPortfolioProgress.createPortfolioHolders = true;
+
+          return data;
+        })
+        .catch((error) => {
+          this.createPortfolioProgress.createPortfolioHolders = false;
+          return Promise.reject(error);
+        });
   }
 }
