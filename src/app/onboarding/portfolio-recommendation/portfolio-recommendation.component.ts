@@ -120,11 +120,15 @@ export class PortfolioRecommendationComponent implements OnInit {
   }
 
   createPortfolioHoldings(portfolioId) {
-    const holdingPromises = this.suggestedAllocation.map(a => {
-      return this.portfolioRecommendationService.createPortfolioHoldings(portfolioId, a.securityId, a.weight);
-    });
+    let holdingPromises = Promise.resolve();
 
-    return Promise.all(holdingPromises);
+    for (const a of this.suggestedAllocation) {
+      holdingPromises = holdingPromises.then(() => {
+        return this.portfolioRecommendationService.createPortfolioHoldings(portfolioId, a.securityId, a.weight);
+      });
+    }
+
+    return holdingPromises;
   }
 
   private saveCreatePortfolioProgress() {
