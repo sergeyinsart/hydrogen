@@ -1,5 +1,7 @@
 # HydrogenClientApp
 
+Install angular cli globally `npm install -g @angular/cli`
+
 Make `npm install` to install all dependencies
 
 ## Development server
