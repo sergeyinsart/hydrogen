@@ -34,8 +34,8 @@ const rates = {
 class CreatePortfolioProgress {
   constructor(metadata) {
     this.portfolioId = metadata.portfolioId;
-    this.setAssetSize = metadata.setAssetSize;
-    this.createPortfolioHolders = metadata.createPortfolioHolders;
+    this.setAssetSize = metadata.setAssetSize === 'true';
+    this.createPortfolioHolders = metadata.createPortfolioHolders === 'true';
   }
   portfolioId: string;
   setAssetSize: boolean;
@@ -98,13 +98,13 @@ export class PortfolioRecommendationComponent implements OnInit {
     const allocationId = this.portfolioRecommendationService.suggestedAllocation.id;
 
     this.subscribeAccountFn(accountId, allocationId)
-      .then((portfolioId) => {
+      .then((portfolioId: string) => {
         this.createPortfolioProgress.portfolioId = portfolioId;
-        const promises = [
-          this.createAssetSizeFn(this.createPortfolioProgress.portfolioId, this.investAmount),
-          this.createPortfolioHoldingsFn(this.createPortfolioProgress.portfolioId)
-        ];
-        return Promise.all(promises);
+
+        return this.createAssetSizeFn(this.createPortfolioProgress.portfolioId, this.investAmount);
+      })
+      .then(() => {
+        return this.createPortfolioHoldingsFn(this.createPortfolioProgress.portfolioId);
       })
       .then(() => {
         return this.saveCreatePortfolioProgress();
@@ -136,7 +136,7 @@ export class PortfolioRecommendationComponent implements OnInit {
     return this.auth.updateUser(updatedUser);
   }
 
-  private subscribeAccountFn(accountId, allocationId) {
+  private subscribeAccountFn(accountId, allocationId): Promise<string> {
     return this.createPortfolioProgress.portfolioId
       ? Promise.resolve(this.createPortfolioProgress.portfolioId)
       : this.portfolioRecommendationService.subscribeAccount(accountId, allocationId)
@@ -145,7 +145,7 @@ export class PortfolioRecommendationComponent implements OnInit {
         });
   }
 
-  private createAssetSizeFn(portfolioId, investAmount): Promise<void | any> {
+  private createAssetSizeFn(portfolioId, investAmount) {
     return this.createPortfolioProgress.setAssetSize
       ? Promise.resolve()
       : this.portfolioRecommendationService.createAssetSize(portfolioId, investAmount)
@@ -161,7 +161,7 @@ export class PortfolioRecommendationComponent implements OnInit {
         });
   }
 
-  private createPortfolioHoldingsFn(portfolioId) {
+  private createPortfolioHoldingsFn(portfolioId){
     return this.createPortfolioProgress.createPortfolioHolders
       ? Promise.resolve()
       : this.createPortfolioHoldings(portfolioId)

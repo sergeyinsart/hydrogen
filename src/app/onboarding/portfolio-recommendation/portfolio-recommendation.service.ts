@@ -5,6 +5,7 @@ import {Allocation, ClientResponse, DecigionNode, ModelHolding, NodeRelationship
 import {OnboardingService} from '../onboarding.service';
 import {QuestionnaireService} from '../questionnaire/questionnaire.service';
 import {Finance} from 'financejs';
+import {DatePipe} from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,8 @@ export class PortfolioRecommendationService {
   constructor(
     private http: HttpClient,
     private onboardingService: OnboardingService,
-    private questionnaireService: QuestionnaireService
+    private questionnaireService: QuestionnaireService,
+    private datePipe: DatePipe
   ) { }
 
   getNodesList() {
@@ -166,7 +168,7 @@ export class PortfolioRecommendationService {
     const url = `${environment.apiUrl}/nucleus/v1/portfolio_asset_size`;
 
     const data = {
-      date: new Date(),
+      date:  this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
       asset_size: amount,
       cash_flow: amount,
       portfolio_id: portfolioId
