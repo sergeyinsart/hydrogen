@@ -99,8 +99,7 @@ export class PortfolioRecommendationComponent implements OnInit {
 
 
     this.subscribeAccountFn(accountId, allocationId)
-    // @ts-ignore
-      .then((portfolioId: string) => {
+      .then((portfolioId) => {
         this.createPortfolioProgress.portfolioId = portfolioId;
 
         return this.createAssetSizeFn(this.createPortfolioProgress.portfolioId, this.investAmount);
@@ -122,10 +121,9 @@ export class PortfolioRecommendationComponent implements OnInit {
   }
 
   createPortfolioHoldings(portfolioId) {
-    let holdingPromises = Promise.resolve();
+    let holdingPromises: any = Promise.resolve();
 
     for (const a of this.suggestedAllocation) {
-      // @ts-ignore
       holdingPromises = holdingPromises.then(() => {
         return this.portfolioRecommendationService.createPortfolioHoldings(portfolioId, a.securityId, a.weight);
       });
@@ -156,19 +154,19 @@ export class PortfolioRecommendationComponent implements OnInit {
     return this.createPortfolioProgress.setAssetSize
       ? Promise.resolve()
       : this.portfolioRecommendationService.createAssetSize(portfolioId, investAmount)
-        .then((data) => {
+        .then((data: any) => {
           this.createPortfolioProgress.setAssetSize = true;
 
           return data;
         })
-        .catch((error) => {
+        .catch((error: any) => {
           this.createPortfolioProgress.setAssetSize = false;
 
           return Promise.reject(error);
         });
   }
 
-  private createPortfolioHoldingsFn(portfolioId){
+  private createPortfolioHoldingsFn(portfolioId) {
     return this.createPortfolioProgress.createPortfolioHolders
       ? Promise.resolve()
       : this.createPortfolioHoldings(portfolioId)
